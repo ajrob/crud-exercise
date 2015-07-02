@@ -31,7 +31,7 @@
 					<label for="body">body</label>
 					<textarea class="form-control" name="body" ng-model="newArticle.body"></textarea>
 				</div>
-				<button class="btn btn-success">Create</button>
+				<button class="btn btn-success" ng-click="create()">Create</button>
 			</section>
 
 			<section>
@@ -48,17 +48,48 @@
 					<label for="body">body</label>
 					<textarea class="form-control" name="body" ng-model="updatedArticle.body"></textarea>
 				</div>
-				<button class="btn btn-success">Update</button>
+				<button class="btn btn-success" ng-click="update(updatedArticle)">Update</button>
 			</section>
 
+			<section>
+				<div class="alert alert-danger alert-dismissible" role="alert" ng-show="hasUpdateError">
+				  <button type="button" class="close" data-dismiss="alert" aria-label="Close" ng-click="hasUpdateError = false">
+				  	<span aria-hidden="true">&times;</span>
+				  </button>
+				  <span>ID not found. No article to update!</span>
+				</div>
+			</section>
 			<div class="panel panel-default" ng-repeat="article in articles">
 				<div class="panel-body">
 					<h3>{{article.title}} <span style="float:right" class="delete glyphicon glyphicon-trash" ng-click="delete(article.id)"></span></h3>
 					<p>{{article.body}}</p>
 				</div>
 			</div>
-
 		</div
 	</body>
+	<script>
+	// Code injected by live-server
+	(function() {
+		function refreshCSS() {
+			var sheets = document.getElementsByTagName("link");
+			for (var i = 0; i < sheets.length; ++i) {
+				var elem = sheets[i];
+				var rel = elem.rel;
+				if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+					var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+					elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+				}
+			}
+		}
+		var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+		var address = protocol + window.location.host + window.location.pathname + '/ws';
+		var socket = new WebSocket(address);
+		socket.onmessage = function(msg) {
+			if (msg.data == 'reload') window.location.reload()
+			else if (msg.data == 'refreshcss') refreshCSS();
+		};
+		console.log('Live reload enabled.');
+	})();
+	</script>
 	<script type="text/javascript" src="app.js"></script>
 </html>
