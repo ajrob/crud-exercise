@@ -19,9 +19,12 @@ app.service('articles', ['$http', function ($http) {
 }])
 
 app.controller('myCtrl', ['$scope', 'articles', function ($scope, articles) {
-	articles.getArticles().success(function(data){
-		$scope.articles = data;
-	});
+	$scope.refreshArticles = function () {
+    articles.getArticles().success(function(data){
+      $scope.articles = data;
+    });
+  } 
+  $scope.refreshArticles();
 
   $scope.hasUpdateError = false;
 	$scope.updatedArticle = {};
@@ -29,6 +32,7 @@ app.controller('myCtrl', ['$scope', 'articles', function ($scope, articles) {
 
 	$scope.delete = function(id){
     articles.deleteArticle(id).success(function (data) {
+    	$scope.refreshArticles();
       console.log("Deleted: ", data);
     });
 	};
@@ -36,6 +40,7 @@ app.controller('myCtrl', ['$scope', 'articles', function ($scope, articles) {
 	$scope.update = function(updatedArticle){
     articles.update($scope.updatedArticle.id, $scope.updatedArticle)
       .success(function (data) {
+        $scope.refreshArticles();
         console.log("Updated: ", data);
       })
       .error(function (data) {
@@ -46,6 +51,7 @@ app.controller('myCtrl', ['$scope', 'articles', function ($scope, articles) {
 
 	$scope.create = function(){
     articles.createArticle($scope.newArticle).success(function (data) {
+      $scope.refreshArticles();
       console.log("Created: ", data);
     });
     $scope.newArticle = {};
